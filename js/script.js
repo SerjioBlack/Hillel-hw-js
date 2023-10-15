@@ -1,47 +1,13 @@
 'use strict';
 
-//1 Вивести числа від 20 до 30 через пропуск, використовуючи крок 0,5 (20 20,5 21 21,5….).
-
-let str = '';
-for (i = 20; i <= 30; i+=0.5) {
-    str += i + ' ';
+const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+function generateKey(length, characters) {
+  let key = '';
+  for (i = 0; i <= length - 1; i++) {
+    const index = Math.floor(Math.random() * characters.length);
+    key += characters[index];
+  }
+  return key;
 }
-console.log(str.trim());
-
-//2 Один долар коштує 27 гривень. Вивести дані з розрахунком вартості 10, 20, 30... 100 доларів.
-
-const dollar = 27;
-for (let i = 10; i <=100; i +=10) {
-    console.log(i * dollar)
-}
-
-//3 Дане ціле число. Вивести всі цілі числа від 1 до 100, квадрат яких не перевищує числа N.
-for (let i = 1; i <=100; i ++) {
-    if ((i ** 2) < 100)
-        console.log(i);
-
-//ИЛИ так
-    for (let i = 1; i <=100; i ++) {
-        if (i <=Math.sqrt(N))
-            console.log(i)
-    }
-
-//4 Дане ціле число. З'ясувати, чи є воно простим (простим називається число, більше 1, які не мають інших дільників крім 1 і себе).
-
-    let n = 20;
-    outer: for (let i = 2; i <= n; i++) {
-        for (let j = 2; j < i; j++) {
-            if (i % j == 0) {
-                continue outer;
-            }
-        }
-        console.log(i);
-    }
-}
-
-//5 Дане деяке число. Визначити, чи можна одержати це число шляхом зведення числа 3 у деякий ступінь. (Наприклад, числа 9, 81 можна отримати, а 13 - не можна).
-let number = 81;
-while (number % 3 == 0) {
-    number /= 3;
-}
-console.log(number);
+const key = generateKey(8, characters);
+console.log(key);
