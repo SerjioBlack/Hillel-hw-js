@@ -19,7 +19,7 @@ let users = [
 "balance": "$2,613.77",
 "name": "Pauline Gallegos",
 "gender": "female",
-"phone": "+1 (985) 593-3328",
+"phone": "+1 (985) 593-3328", 
 "address": "328 Greenpoint Avenue, Torboy, North Dakota, 6857"
 },
 {
