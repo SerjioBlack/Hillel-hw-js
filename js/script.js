@@ -8,7 +8,7 @@ function info(phone, email) {
     return `${this.name}, ${phone}, ${email}`
 }
 
-(function bind(fn, context, ...rest) {
+(function(fn, context, ...rest) {
     return function (...args) {
         const someKey = "value";
         context[someKey] = fn;
@@ -16,9 +16,9 @@ function info(phone, email) {
         delete context[someKey];
         return res;
     }
-})();
+})(info, user, "0800500500", "1@gmail.com");
 
-bind(info, user, "0800500500", "1@gmail.com")();
+
 
 
 
