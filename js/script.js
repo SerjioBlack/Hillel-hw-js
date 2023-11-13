@@ -5,7 +5,7 @@ const user = {
 };
 
 function info(phone, email) {
-    return `${this.name}, ${phone}, ${email}`;
+    return `${this.name}, ${phone}, ${email}`
 }
 
 (function bind(fn, context, ...rest) {
