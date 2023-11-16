@@ -1,22 +1,21 @@
 'use strict';
 
-const user = {
-    name: "Serjio",
-};
+const insertWordInto = function (str) {
+    let newStr = str;
 
-function info(phone, email) {
-    return `${this.name}, ${phone}, ${email}`
-}
-
-(function(fn, context, ...rest) {
-    return function (...args) {
-        const someKey = "value";
-        context[someKey] = fn;
-        const res = context[someKey](...rest.concat(args));
-        delete context[someKey];
-        return res;
+    function inner(word) {
+        let arr = newStr.split(" ");
+        arr
+            .splice(((arr.length + 1) * Math.random()) | 0, 0, word)
+            .sort(() => Math.random() - 0.5);
+        return arr.join(" ");
     }
-})(info, user, "0800500500", "1@gmail.com");
+    return inner("Odessa");
+};
+insertWordInto("Hello world");
+insertWordInto("Hello world");
+insertWordInto("Hello world");
+
 
 
 
