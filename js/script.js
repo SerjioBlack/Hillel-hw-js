@@ -1,20 +1,26 @@
 'use strict';
 
-let createTable = () => {
-    const table = document.createElement("table");
+let generateList = (array) => {
+    const ul = document.createElement("ul");
 
-    let count = 1;
-    for (let i = 1; i <= 10; i++) {
-        const row = table.insertRow();
-        for (let j = 1; j <= 10; j++) {
-            const cell = row.insertCell();
-            cell.innerHTML = count++;
+    for (const item of array) {
+        const li = document.createElement("li");
+
+        if (Array.isArray(item)) {
+            const levelTwoUl = generateList(item);
+            li.appendChild(levelTwoUl);
+        } else {
+            li.textContent = item;
         }
+        ul.appendChild(li);
     }
-    document.body.appendChild(table);
+    return ul;
 };
 
-createTable();
+const data = [1, 2, [1.1, 1.2, 1.3], 3];
+const list = generateList(data);
+document.body.appendChild(list);
+
 
 
 
