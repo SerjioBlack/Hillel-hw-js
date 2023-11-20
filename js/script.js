@@ -1,20 +1,20 @@
 'use strict';
 
-const insertWordInto = function (str) {
-    let newStr = str;
+let createTable = () => {
+    const table = document.createElement("table");
 
-    function inner(word) {
-        let arr = newStr.split(" ");
-        arr
-            .splice(((arr.length + 1) * Math.random()) | 0, 0, word)
-            .sort(() => Math.random() - 0.5);
-        return arr.join(" ");
+    let count = 1;
+    for (let i = 1; i <= 10; i++) {
+        const row = table.insertRow();
+        for (let j = 1; j <= 10; j++) {
+            const cell = row.insertCell();
+            cell.innerHTML = count++;
+        }
     }
-    return inner("Odessa");
+    document.body.appendChild(table);
 };
-insertWordInto("Hello world");
-insertWordInto("Hello world");
-insertWordInto("Hello world");
+
+createTable();
 
 
 
