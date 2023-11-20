@@ -1,25 +1,21 @@
 'use strict';
 
-let generateList = (array) => {
-    const ul = document.createElement("ul");
+const list = document.querySelector("#ulId");
+console.log(list.children);
 
-    for (const item of array) {
-        const li = document.createElement("li");
+let attributesList = [];
+let attributesListNames = [];
+for (attr of list.attributes) {
+    attributesListNames.push(attr.name);
+    attributesList.push(attr.value);
+}
+console.log(attributesList);
+console.log(attributesListNames);
 
-        if (Array.isArray(item)) {
-            const levelTwoUl = generateList(item);
-            li.appendChild(levelTwoUl);
-        } else {
-            li.textContent = item;
-        }
-        ul.appendChild(li);
-    }
-    return ul;
-};
+list.lastElementChild.innerHTML = "Привет меня зовут Sergey";
+list.firstElementChild.setAttribute("data-my-name", "Sergey");
+list.removeAttribute("data-dog-tail");
 
-const data = [1, 2, [1.1, 1.2, 1.3], 3];
-const list = generateList(data);
-document.body.appendChild(list);
 
 
 
