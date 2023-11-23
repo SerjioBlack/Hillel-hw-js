@@ -1,25 +1,20 @@
 'use strict';
 
 (() => {
-    const img = new Image(400, 400);
-    document.body.appendChild(img);
+    const input = document.querySelector("[data-text]");
+    const ghost = document.createElement("div");
+    ghost.innerHTML = "Hello from Ghost";
+    document.body.appendChild(ghost);
 
-    const imageFiles = [
-        "1.jpg",
-        "2.jpg",
-        "3.jpg",
-        "4.jpg",
-        "5.jpg",
-        "6.jpg",
-        "7.jpg",
-        "8.jpg",
-        "9.jpg",
-    ];
-    const randomFileName =
-        imageFiles[Math.floor(Math.random() * imageFiles.length)];
+    input.addEventListener("focus", () => {
+        ghost.style.visibility = "visible";
+    });
 
-    return (img.src = `image/${randomFileName}`);
+    input.addEventListener("blur", () => {
+        ghost.style.visibility = "hidden";
+    });
 })();
+
 
 
 
