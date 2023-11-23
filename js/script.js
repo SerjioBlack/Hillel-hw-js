@@ -1,20 +1,26 @@
 'use strict';
 
-const insertWordInto = function (str) {
-    let newStr = str;
+(() => {
+    const img = new Image(400, 400);
+    document.body.appendChild(img);
 
-    function inner(word) {
-        let arr = newStr.split(" ");
-        arr
-            .splice(((arr.length + 1) * Math.random()) | 0, 0, word)
-            .sort(() => Math.random() - 0.5);
-        return arr.join(" ");
-    }
-    return inner("Odessa");
-};
-insertWordInto("Hello world");
-insertWordInto("Hello world");
-insertWordInto("Hello world");
+    const imageFiles = [
+        "1.jpg",
+        "2.jpg",
+        "3.jpg",
+        "4.jpg",
+        "5.jpg",
+        "6.jpg",
+        "7.jpg",
+        "8.jpg",
+        "9.jpg",
+    ];
+    const randomFileName =
+        imageFiles[Math.floor(Math.random() * imageFiles.length)];
+
+    return (img.src = `image/${randomFileName}`);
+})();
+
 
 
 
