@@ -1,70 +1,67 @@
-h1 {
-    font-family: helvetica, arial, sans-serif;
-    text-align: center;
-}
-
 body {
-    width: 640px;
-    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    padding: 20px;
 }
 
-.full-img {
-    position: relative;
-    display: block;
-    width: 640px;
-    height: 480px;
-    cursor: pointer;
-    transition: 0.3s ease;
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 640px;
-    height: 480px;
-    background-color: rgba(0, 0, 0, 0);
-}
-
-button {
-    border: 0;
-    background: rgba(150, 150, 150, 0.6);
-    text-shadow: 1px 1px 1px white;
-    border: 1px solid #999;
-    position: absolute;
-    cursor: pointer;
-    top: 2px;
-    left: 2px;
-    font-size: 22px;
-}
-
-.thumb-bar img {
-    display: block;
-    width: 20%;
-    float: left;
-    cursor: pointer;
+li {
     margin-bottom: 10px;
 }
 
-.tabs {
-    display: flex;
+.dark {
+    background-color: #333;
+    color: #fff;
 }
 
-.tab {
-    padding: 10px;
+.toggleFavorite {
     cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 5px 5px 0 0;
-    margin-right: 5px;
 }
 
-.tab:hover {
-    background-color: #f0f0f0;
+.radio-container {
+    display: flex;
+    width: 200px;
+    height: 36px;
+    background: lightseagreen;
+    overflow: hidden;
+    position: relative;
+    z-index: 5;
+    border-radius: 40px;
 }
 
-.tab-content {
-    display: none;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 0 0 5px 5px;
+input[type="radio"] {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+input[type="radio"] + label {
+    flex: 1 1 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+input[type="radio"] ~ span {
+    position: absolute;
+    top: 2px;
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+    bottom: 2px;
+    width: 50%;
+    border-radius: 40px;
+    background: lightgrey;
+    z-index: -1;
+    transition: .3s ease;
+}
+
+input[type="radio"]:checked + label + input + label + span {
+    left: 2px;
+    transform: translateX(0);
 }
