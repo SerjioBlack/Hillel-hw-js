@@ -1,57 +1,42 @@
 'use strict';
 
-(() => {
-  const tabs = document.querySelectorAll('.tab');
-  const tabContents = document.querySelectorAll('.tab-content');
+(function () {
+  const FORM_DATA = 'formData';
 
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', function () {
-      tabContents.forEach((tabContent) => (tabContent.style.display = 'none'));
+  const saveData = (key, data = null) => {
+    localStorage.setItem(FORM_DATA, JSON.stringify(data));
+    return data;
+  };
 
-      const tabId = this.id.replace('tab', 'content');
+  const getData = (key) => {
+    let data = localStorage.getItem(key);
+    data = JSON.parse(data);
+    return data;
+  };
 
-      const selectedTab = document.getElementById(tabId);
-      selectedTab.style.display = 'block';
-    });
-  });
-})();
+  const prefillForm = (form) => {
+    const data = getData('');
+    if (data === null) return;
+    form
+      .querySelectorAll('input, textarea, select')
+      .forEach((input) => (input.value = data[input.name]));
+  };
 
-(() => {
-  const displayedImage = document.querySelector('.displayed-img');
-  const thumbBar = document.querySelector('.thumb-bar');
-  const btn = document.querySelector('button');
-  const overlay = document.querySelector('.overlay');
-  const full = document.querySelector('.full-img');
-  const images = ['pic1.jpg', 'pic2.jpg', 'pic3.jpg', 'pic4.jpg', 'pic5.jpg'];
+  const formHandler = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const { target } = e;
+    const data = {};
+    target
+      .querySelectorAll('input, textarea, select')
+      .forEach((item) => (data[item.name] = item.value));
+    saveData(FORM_DATA, data);
+  };
 
-  for (const image of images) {
-    const newImage = document.createElement('img');
-    newImage.setAttribute('src', `image/${image}`);
-    thumbBar.appendChild(newImage);
-    newImage.addEventListener('click', (e) => {
-      displayedImage.src = e.target.src;
-    });
-  }
+  const loadedHandler = (e) => {
+    const form = document.querySelector('#form');
+    form.addEventListener('submit', formHandler);
+  };
 
-  full.addEventListener('click', () => {
-    // При клике, масштабируем элемент
-    if (full.style.transform === 'scale(1)') {
-      full.style.transform = 'scale(1.2)';
-    } else {
-      full.style.transform = 'scale(1)';
-    }
-  });
-
-  btn.addEventListener('click', () => {
-    const btnClass = btn.getAttribute('class');
-    if (btnClass === 'dark') {
-      btn.setAttribute('class', 'light');
-      btn.innerHTML = 'Lighten';
-      overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    } else {
-      btn.setAttribute('class', 'dark');
-      btn.innerHTML = 'Darker';
-      overlay.style.backgroundColor = 'rgba(0,0,0,0)';
-    }
-  });
-})();
+  document.addEventListener('DOMContentLoaded', loadedHandler);
+}());
