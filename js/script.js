@@ -1,66 +1,161 @@
 'use strict';
 
 (function () {
-  document.addEventListener('DOMContentLoaded', () => {
-    const favoritesList = document.getElementById('favoritesList');
-    const itemsList = document.getElementById('itemsList');
-    const colorSchemeInputs = document.querySelectorAll(
-      'input[name="colorScheme"]',
-    );
-
-    const savedColorScheme = localStorage.getItem('colorScheme');
-    if (savedColorScheme) {
-      document.body.classList.add(savedColorScheme);
-      colorSchemeInputs.forEach((input) => {
-        if (input.value === savedColorScheme) {
-          input.checked = true;
-        }
-      });
-    }
-
-    const savedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
-
-    function updateFavorites() {
-      favoritesList.innerHTML = '';
-      savedFavorites.forEach((itemId) => {
-        const item = document.querySelector(`[data-id="${itemId}"]`);
-        if (item) {
-          const li = document.createElement('li');
-          li.textContent = item.textContent;
-          favoritesList.appendChild(li);
-        }
-      });
-    }
-
-    function toggleFavorite(itemId) {
-      const index = savedFavorites.indexOf(itemId);
-      if (index === -1) {
-        savedFavorites.push(itemId);
-      } else {
-        savedFavorites.splice(index, 1);
-      }
-      localStorage.setItem('favorites', JSON.stringify(savedFavorites));
-      updateFavorites();
-    }
-
-    function applyColorScheme(scheme) {
-      document.body.className = scheme;
-      localStorage.setItem('colorScheme', scheme);
-    }
-
-    colorSchemeInputs.forEach((input) => {
-      input.addEventListener('change', function () {
-        applyColorScheme(this.value);
-      });
-    });
-
-    itemsList.addEventListener('click', (e) => {
-      if (e.target.classList.contains('toggleFavorite')) {
-        const itemId = e.target.closest('li').dataset.id;
-        toggleFavorite(itemId);
-      }
-    });
-
-    updateFavorites();
+  const CONSTANTS = Object.freeze({
+    todoFormSelector: '#todoForm',
+    todoContainerSelector: '#todoItems',
+    dataKey: 'formData',
   });
+
+  const controller = {
+    formHandler(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const { target } = e;
+      const data = Array.from(
+        target.querySelectorAll('input, textarea'),
+      ).reduce((acc, item) => {
+        acc[item.name] = item.value;
+        return acc;
+      }, {});
+
+      const savedData = model.save(data);
+      if (savedData) {
+        view.renderElement(savedData);
+        view.resetForm();
+      }
+    },
+
+    removeTodoItemHandler(e) {
+      e.stopPropagation();
+      const { target } = e;
+      if (!target.hasAttribute('data-remove-btn')) return;
+      const todoId = +target
+        .closest('[data-todo-item]')
+        .getAttribute('data-todo-item');
+      const removedElement = !!model.removeElementById(todoId);
+
+      if (removedElement) {
+        view.removeElement(todoId);
+        return;
+      }
+      alert(`Cannot remove element${removedElement.title}`);
+    },
+
+    loadedHandler() {
+      model.initId();
+      const form = document.querySelector(CONSTANTS.todoFormSelector);
+      form.addEventListener('submit', this.formHandler);
+
+      model.get().forEach((item) => {
+        view.renderElement(item);
+      });
+
+      const todoContainer = document.querySelector(
+        CONSTANTS.todoContainerSelector,
+      );
+      todoContainer.addEventListener('click', this.removeTodoItemHandler);
+    },
+
+    init() {
+      this.formHandler = this.formHandler.bind(this);
+      this.loadedHandler = this.loadedHandler.bind(this);
+      this.removeTodoItemHandler = this.removeTodoItemHandler.bind(this);
+
+      document.addEventListener('DOMContentLoaded', this.loadedHandler);
+    },
+  };
+
+  const view = {
+    renderElement(data) {
+      const template = this.createTemplate(data);
+      this.renderTodoItem(template);
+    },
+
+    renderTodoItem(elementToRender) {
+      const todoContainer = document.querySelector('#todoItems');
+      todoContainer.prepend(elementToRender);
+      return elementToRender;
+    },
+
+    createTemplate(data) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'col-4';
+      wrapper.setAttribute('data-todo-item', data.id);
+
+      const taskWrapper = document.createElement('div');
+      taskWrapper.className = 'taskWrapper';
+      wrapper.appendChild(taskWrapper);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'btn btn-sm btn-danger';
+      deleteBtn.innerText = 'X';
+      deleteBtn.setAttribute('data-remove-btn', '');
+      taskWrapper.appendChild(deleteBtn);
+
+      const taskHeading = document.createElement('div');
+      taskHeading.className = 'taskHeading';
+      taskHeading.innerHTML = data.title;
+      taskWrapper.appendChild(taskHeading);
+
+      const taskDescription = document.createElement('div');
+      taskDescription.className = 'taskDescription';
+      taskDescription.innerHTML = data.description;
+      taskWrapper.appendChild(taskDescription);
+
+      return wrapper;
+    },
+
+    resetForm() {
+      document.querySelector(CONSTANTS.todoFormSelector).reset();
+    },
+
+    removeElement(todoId) {
+      document.querySelector(`[data-todo-item='${todoId}']`).remove();
+    },
+  };
+
+  const model = {
+    currentId: 0,
+
+    save(data) {
+      ++this.currentId;
+      const dataCopy = { id: this.currentId, ...data };
+      const savedData = this.get();
+      savedData.push(dataCopy);
+
+      try {
+        localStorage.setItem(CONSTANTS.dataKey, JSON.stringify(savedData));
+        return this.get().at(-1);
+      } catch (error) {
+        return false;
+      }
+    },
+
+    get() {
+      const savedData = JSON.parse(localStorage.getItem(CONSTANTS.dataKey));
+      return savedData || [];
+    },
+
+    removeElementById(todoId) {
+      const savedElements = this.get();
+      const index = savedElements.findIndex(({ id }) => todoId === id);
+      const [removedElement] = savedElements.splice(index, 1);
+      try {
+        localStorage.setItem(CONSTANTS.dataKey, JSON.stringify(savedElements));
+        return removedElement;
+      } catch (error) {
+        console.log('Cannot remove element', removedElement);
+        return false;
+      }
+    },
+
+    initId() {
+      const items = this.get();
+      if (!items.length) return;
+      this.currentId = +items.at(-1).id;
+    },
+  };
+
+  controller.init();
 }());
