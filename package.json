@@ -2,7 +2,8 @@
   "name": "hw-1",
   "version": "1.0.0",
   "description": "-",
-  "main": "index.html",
+  "main": "gulpfile.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,12 +18,15 @@
   },
   "homepage": "https://github.com/SerjioBlack/Hillel-hw-js#readme",
   "devDependencies": {
+    "del": "^7.1.0",
     "eslint": "^8.51.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.28.1"
+    "eslint-plugin-import": "^2.28.1",
+    "gulp": "^4.0.2",
+    "gulp-file-include": "^2.3.0",
+    "gulp-replace": "^1.1.4"
   },
   "dependencies": {
-    "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0"
   }
 }
