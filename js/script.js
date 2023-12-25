@@ -2,9 +2,9 @@
 
 (function () {
   const CONSTANTS = Object.freeze({
-    todoFormSelector: '#todoForm',
-    todoContainerSelector: '#todoItems',
-    dataKey: 'formData',
+    todoFormSelector: "#todoForm",
+    todoContainerSelector: "#todoItems",
+    dataKey: "formData",
   });
 
   const controller = {
@@ -13,7 +13,7 @@
       e.stopPropagation();
       const { target } = e;
       const data = Array.from(
-        target.querySelectorAll('input, textarea'),
+          target.querySelectorAll("input, textarea")
       ).reduce((acc, item) => {
         acc[item.name] = item.value;
         return acc;
@@ -29,32 +29,32 @@
     removeTodoItemHandler(e) {
       e.stopPropagation();
       const { target } = e;
-      if (!target.hasAttribute('data-remove-btn')) return;
+      if (!target.hasAttribute("data-remove-btn")) return;
       const todoId = +target
-        .closest('[data-todo-item]')
-        .getAttribute('data-todo-item');
+          .closest("[data-todo-item]")
+          .getAttribute("data-todo-item");
       const removedElement = !!model.removeElementById(todoId);
 
       if (removedElement) {
         view.removeElement(todoId);
         return;
       }
-      alert(`Cannot remove element${removedElement.title}`);
+      alert("Cannot remove element" + removedElement.title);
     },
 
     loadedHandler() {
       model.initId();
       const form = document.querySelector(CONSTANTS.todoFormSelector);
-      form.addEventListener('submit', this.formHandler);
+      form.addEventListener("submit", this.formHandler);
 
       model.get().forEach((item) => {
         view.renderElement(item);
       });
 
       const todoContainer = document.querySelector(
-        CONSTANTS.todoContainerSelector,
+          CONSTANTS.todoContainerSelector
       );
-      todoContainer.addEventListener('click', this.removeTodoItemHandler);
+      todoContainer.addEventListener("click", this.removeTodoItemHandler);
     },
 
     init() {
@@ -62,7 +62,7 @@
       this.loadedHandler = this.loadedHandler.bind(this);
       this.removeTodoItemHandler = this.removeTodoItemHandler.bind(this);
 
-      document.addEventListener('DOMContentLoaded', this.loadedHandler);
+      document.addEventListener("DOMContentLoaded", this.loadedHandler);
     },
   };
 
@@ -73,33 +73,33 @@
     },
 
     renderTodoItem(elementToRender) {
-      const todoContainer = document.querySelector('#todoItems');
+      const todoContainer = document.querySelector("#todoItems");
       todoContainer.prepend(elementToRender);
       return elementToRender;
     },
 
     createTemplate(data) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'col-4';
-      wrapper.setAttribute('data-todo-item', data.id);
+      const wrapper = document.createElement("div");
+      wrapper.className = "col-4";
+      wrapper.setAttribute("data-todo-item", data.id);
 
-      const taskWrapper = document.createElement('div');
-      taskWrapper.className = 'taskWrapper';
+      const taskWrapper = document.createElement("div");
+      taskWrapper.className = "taskWrapper";
       wrapper.appendChild(taskWrapper);
 
-      const deleteBtn = document.createElement('button');
-      deleteBtn.className = 'btn btn-sm btn-danger';
-      deleteBtn.innerText = 'X';
-      deleteBtn.setAttribute('data-remove-btn', '');
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "btn btn-sm btn-danger";
+      deleteBtn.innerText = "X";
+      deleteBtn.setAttribute("data-remove-btn", "");
       taskWrapper.appendChild(deleteBtn);
 
-      const taskHeading = document.createElement('div');
-      taskHeading.className = 'taskHeading';
+      const taskHeading = document.createElement("div");
+      taskHeading.className = "taskHeading";
       taskHeading.innerHTML = data.title;
       taskWrapper.appendChild(taskHeading);
 
-      const taskDescription = document.createElement('div');
-      taskDescription.className = 'taskDescription';
+      const taskDescription = document.createElement("div");
+      taskDescription.className = "taskDescription";
       taskDescription.innerHTML = data.description;
       taskWrapper.appendChild(taskDescription);
 
@@ -116,17 +116,33 @@
   };
 
   const model = {
-    currentId: 0,
+    _currentId: 0,
+    _data: [],
+
+    get currentId() {
+      return this._currentId;
+    },
+
+    set currentId(value) {
+      this._currentId = value;
+    },
+
+    get data() {
+      return this._data;
+    },
+
+    set data(value) {
+      this._data = value;
+    },
 
     save(data) {
-      ++this.currentId;
+      this.currentId++;
       const dataCopy = { id: this.currentId, ...data };
-      const savedData = this.get();
-      savedData.push(dataCopy);
+      this.data.push(dataCopy);
 
       try {
-        localStorage.setItem(CONSTANTS.dataKey, JSON.stringify(savedData));
-        return this.get().at(-1);
+        localStorage.setItem(CONSTANTS.dataKey, JSON.stringify(this.data));
+        return this.data.at(-1);
       } catch (error) {
         return false;
       }
@@ -134,18 +150,19 @@
 
     get() {
       const savedData = JSON.parse(localStorage.getItem(CONSTANTS.dataKey));
-      return savedData || [];
+      return savedData ? savedData : [];
     },
 
     removeElementById(todoId) {
-      const savedElements = this.get();
-      const index = savedElements.findIndex(({ id }) => todoId === id);
-      const [removedElement] = savedElements.splice(index, 1);
+      const index = this.data.findIndex(({ id }) => {
+        return todoId === id;
+      });
+      const [removedElement] = this.data.splice(index, 1);
       try {
-        localStorage.setItem(CONSTANTS.dataKey, JSON.stringify(savedElements));
+        localStorage.setItem(CONSTANTS.dataKey, JSON.stringify(this.data));
         return removedElement;
       } catch (error) {
-        console.log('Cannot remove element', removedElement);
+        console.log("Cannot remove element", removedElement);
         return false;
       }
     },
@@ -158,4 +175,4 @@
   };
 
   controller.init();
-}());
+})();
