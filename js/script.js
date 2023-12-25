@@ -1,25 +1,50 @@
 'use strict';
 
 (() => {
-    const input = document.querySelector("[data-text]");
-    const ghost = document.createElement("div");
-    ghost.innerHTML = "Hello from Ghost";
-    document.body.appendChild(ghost);
+  const user = {
+    name: 'John',
+  };
 
-    input.addEventListener("focus", () => {
-        ghost.style.visibility = "visible";
-    });
+  Object.defineProperty(user, 'name', { writable: false });
+  Object.defineProperty(user, 'age', {
+    value: 40,
+    enumerable: false,
+    configurable: true,
+    writable: true,
+  });
 
-    input.addEventListener("blur", () => {
-        ghost.style.visibility = "hidden";
-    });
+  for (const key in user) console.log(key);
+  console.log(Object.keys(user));
+
+  Object.defineProperty(user, 'surname', {
+    value: 'Malcovich',
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+
+  Object.defineProperty(user, 'fullName', {
+    get() {
+      return `${this.name} ${this.surname}`;
+    },
+    set(value) {
+      [this.name, this.surname] = value.split(' ');
+    },
+    enumerable: true,
+    configurable: true,
+  });
 })();
 
+(() => {
+  const userTwo = Object.freeze({
+    name: 'Jack',
+    age: 30,
+  });
 
-
-
-
-
-
-
-
+  Object.defineProperty(userTwo, 'name', {
+    value: 28,
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+})();
