@@ -116,23 +116,18 @@
   };
 
   const model = {
-    _currentId: 0,
-    _data: [],
+    currentId: 0,
 
     get currentId() {
-      return this._currentId;
+      return this.currentId;
     },
 
     set currentId(value) {
-      this._currentId = value;
-    },
-
-    get data() {
-      return this._data;
-    },
-
-    set data(value) {
-      this._data = value;
+      if (typeof value === 'number' && value >= 0) {
+        this.currentId = value;
+      } else {
+        console.error('Invalid value for currentId');
+      }
     },
 
     save(data) {
