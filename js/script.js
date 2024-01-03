@@ -1,50 +1,69 @@
 'use strict';
 
 (() => {
-  const user = {
-    name: 'John',
-  };
+  function reverseArrayIterator(arr) {
+    let index = arr.length - 1;
 
-  Object.defineProperty(user, 'name', { writable: false });
-  Object.defineProperty(user, 'age', {
-    value: 40,
-    enumerable: false,
-    configurable: true,
-    writable: true,
-  });
+    return {
+      next() {
+        return index >= 0
+          ? { value: arr[index--], done: false }
+          : { done: true };
+      },
+    };
+  }
 
-  for (const key in user) console.log(key);
-  console.log(Object.keys(user));
+  const myArray = [1, 2, 3, 4, 5];
+  const reverseIterator = reverseArrayIterator(myArray);
 
-  Object.defineProperty(user, 'surname', {
-    value: 'Malcovich',
-    writable: true,
-    enumerable: true,
-    configurable: true,
-  });
-
-  Object.defineProperty(user, 'fullName', {
-    get() {
-      return `${this.name} ${this.surname}`;
-    },
-    set(value) {
-      [this.name, this.surname] = value.split(' ');
-    },
-    enumerable: true,
-    configurable: true,
-  });
+  reverseIterator.next();
+  reverseIterator.next();
+  reverseIterator.next();
+  reverseIterator.next();
+  reverseIterator.next();
 })();
 
 (() => {
-  const userTwo = Object.freeze({
-    name: 'Jack',
-    age: 30,
-  });
+  function* fibonacciGenerator() {
+    let a = 0;
+    let b = 1;
 
-  Object.defineProperty(userTwo, 'name', {
-    value: 28,
-    writable: true,
-    enumerable: true,
-    configurable: true,
-  });
+    while (true) {
+      yield a;
+      [a, b] = [b, a + b];
+    }
+  }
+
+  const fibonacciSequence = fibonacciGenerator();
+
+  fibonacciSequence.next();
+  fibonacciSequence.next();
+  fibonacciSequence.next();
+  fibonacciSequence.next();
+  fibonacciSequence.next();
+})();
+
+(() => {
+  function createObjectKeysIterator(obj) {
+    const keys = Object.keys(obj);
+    let index = 0;
+
+    return {
+      next() {
+        if (index < keys.length) {
+          return { value: keys[index++], done: false };
+        }
+        return { done: true };
+      },
+    };
+  }
+
+  const myObject = { a: 1, b: 2, c: 3 };
+  const keysIterator = createObjectKeysIterator(myObject);
+
+  let result = keysIterator.next();
+  while (!result.done) {
+    console.log(result.value);
+    result = keysIterator.next();
+  }
 })();
