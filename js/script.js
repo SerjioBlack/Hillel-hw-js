@@ -1,69 +1,44 @@
 'use strict';
 
 (() => {
-  function reverseArrayIterator(arr) {
-    let index = arr.length - 1;
-
-    return {
-      next() {
-        return index >= 0
-          ? { value: arr[index--], done: false }
-          : { done: true };
-      },
-    };
+  function Human(name, age) {
+    this.name = name;
+    this.age = age;
   }
 
-  const myArray = [1, 2, 3, 4, 5];
-  const reverseIterator = reverseArrayIterator(myArray);
+  Human.prototype.displayInfo = function () {
+    console.log(`Name: ${this.name}, Age: ${this.age}`);
+  };
 
-  reverseIterator.next();
-  reverseIterator.next();
-  reverseIterator.next();
-  reverseIterator.next();
-  reverseIterator.next();
-})();
+  function Car(brand, model, year, licensePlate, owner) {
+    this.brand = brand;
+    this.model = model;
+    this.year = year;
+    this.licensePlate = licensePlate;
 
-(() => {
-  function* fibonacciGenerator() {
-    let a = 0;
-    let b = 1;
-
-    while (true) {
-      yield a;
-      [a, b] = [b, a + b];
+    if (owner instanceof Human && owner.age >= 18) {
+      this.owner = owner;
+    } else {
+      console.log("Invalid owner or owner is under 18 years old.");
     }
   }
 
-  const fibonacciSequence = fibonacciGenerator();
+  Car.prototype.displayInfo = function () {
+    console.log(`Car: ${this.brand} ${this.model}, Year: ${this.year},
+License Plate: ${this.licensePlate}`);
+    if (this.owner) {
+      console.log("Owner Info:");
+      this.owner.displayInfo();
+    }
+  };
 
-  fibonacciSequence.next();
-  fibonacciSequence.next();
-  fibonacciSequence.next();
-  fibonacciSequence.next();
-  fibonacciSequence.next();
-})();
+  const person1 = new Human("Vova", 25);
+  const person2 = new Human("Vasya", 17);
 
-(() => {
-  function createObjectKeysIterator(obj) {
-    const keys = Object.keys(obj);
-    let index = 0;
+  const car1 = new Car("Toyota", "Camry", 2020, "ABC123", person1);
+  const car2 = new Car("Honda", "Civic", 2018, "XYZ789", person2);
 
-    return {
-      next() {
-        if (index < keys.length) {
-          return { value: keys[index++], done: false };
-        }
-        return { done: true };
-      },
-    };
-  }
+  car1.displayInfo();
+  car2.displayInfo();
 
-  const myObject = { a: 1, b: 2, c: 3 };
-  const keysIterator = createObjectKeysIterator(myObject);
-
-  let result = keysIterator.next();
-  while (!result.done) {
-    console.log(result.value);
-    result = keysIterator.next();
-  }
 })();
