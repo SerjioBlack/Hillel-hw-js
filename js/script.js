@@ -1,44 +1,56 @@
 'use strict';
 
-(() => {
-  function Human(name, age) {
-    this.name = name;
-    this.age = age;
+function Student(name, surname, birthYear, lessonsCount = 25) {
+  const gradeSettings = {
+    min: 0,
+    max: 100
   }
 
-  Human.prototype.displayInfo = function () {
-    console.log(`Name: ${this.name}, Age: ${this.age}`);
-  };
+  this.name = name
+  this.surname = surname
+  this.birthYear = birthYear
+  this.grades = new Array(lessonsCount)
+  this.attendance = new Array(lessonsCount)
+  this.currentLesson = 0;
 
-  function Car(brand, model, year, licensePlate, owner) {
-    this.brand = brand;
-    this.model = model;
-    this.year = year;
-    this.licensePlate = licensePlate;
-
-    if (owner instanceof Human && owner.age >= 18) {
-      this.owner = owner;
-    } else {
-      console.log("Invalid owner or owner is under 18 years old.");
-    }
+  Student.prototype.checkAttendance = function (lessonVisited = true) {
+    if(typeof lessonVisited !== "boolean") throw new Error('lessonVisited should be boolean');
+    if(this.currentLesson >= lessonsCount) return
+    console.log('Cant add more than 25 lessons')
+    this.attendance[this.currentLesson] = lessonVisited;
+    ++this.currentLesson
   }
 
-  Car.prototype.displayInfo = function () {
-    console.log(`Car: ${this.brand} ${this.model}, Year: ${this.year},
-License Plate: ${this.licensePlate}`);
-    if (this.owner) {
-      console.log("Owner Info:");
-      this.owner.displayInfo();
-    }
-  };
+  Student.prototype.getAge = function () {
+    if(typeof this.birthYear !== 'number') throw new
+    Error('birthYear should be a number')
+    return new Date().getFullYear() - this.birthYear
+  }
 
-  const person1 = new Human("Vova", 25);
-  const person2 = new Human("Vasya", 17);
+  Student.prototype.present = function () {
+    this.checkAttendance();
+  }
+  Student.prototype.absent = function () {
+    this.checkAttendance(false);
+  }
 
-  const car1 = new Car("Toyota", "Camry", 2020, "ABC123", person1);
-  const car2 = new Car("Honda", "Civic", 2018, "XYZ789", person2);
+  Student.prototype.setGrade = function (grade) {
+    if(typeof grade !== 'number') throw new Error('Grade should be a number')
+    if(grade > gradeSettings.max || grade < gradeSettings.min) throw new Error('Cannot add grade');
+    const currentLessonIndex = this.currentLesson - 1;
 
-  car1.displayInfo();
-  car2.displayInfo();
+    if(!this.attendance[currentLessonIndex]) throw new Error('Cannot set grade, student has not been on the lesson')
+    this.grades[this.currentLesson - 1] = grade;
+  }
+};
 
-})();
+
+const student1 = new Student('Jack', 'Black', 1990)
+console.log(student1.getAge());
+student1.present()
+student1.setGrade(70)
+student1.absent()
+student1.absent()
+student1.present()
+student1.setGrade(30)
+console.log(student1);
