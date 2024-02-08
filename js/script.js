@@ -1,57 +1,21 @@
-class TaskManager {
-  constructor() {
-    this.tasks = new Map();
-  }
+'use strict';
 
-  addTask(id, description) {
-    if (this.tasks.has(id)) {
-      console.log('Помилка: Завдання з таким ID вже існує.');
-    } else {
-      this.tasks.set(id, description);
-      console.log('Завдання успішно додано.');
-    }
-  }
+function analyzeText(text) {
+  const cleanedText = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '').toLowerCase();
 
-  removeTask(id) {
-    if (this.tasks.has(id)) {
-      this.tasks.delete(id);
-      console.log('Завдання успішно видалено.');
-    } else {
-      console.log('Помилка: Завдання з таким ID не існує.');
-    }
-  }
+  const words = cleanedText.split(/\s+/);
 
-  findTask(id) {
-    if (this.tasks.has(id)) {
-      return this.tasks.get(id);
-    }
-    return 'Помилка: Завдання не знайдено.';
-  }
+  const uniqueWordsSet = new Set(words);
 
-  displayTasks() {
-    console.log('Список завдань:');
-    this.tasks.forEach((description, id) => {
-      console.log(`ID: ${id}, Опис: ${description}`);
-    });
-  }
+  const uniqueWordsArray = Array.from(uniqueWordsSet);
 
-  updateTaskDescription(id, newDescription) {
-    if (this.tasks.has(id)) {
-      this.tasks.set(id, newDescription);
-      console.log('Опис завдання успішно оновлено.');
-    } else {
-      console.log('Помилка: Завдання з таким ID не існує.');
-    }
-  }
+  return {
+    uniqueWordsCount: uniqueWordsArray.length,
+    uniqueWords: uniqueWordsArray
+  };
 }
 
-const manager = new TaskManager();
-
-manager.addTask(1, 'Зробити покупки');
-manager.addTask(2, 'Відправити листа');
-console.log(manager.findTask(1));
-
-manager.updateTaskDescription(1, 'Зробити покупки в супермаркеті');
-manager.displayTasks();
-manager.removeTask(2);
-manager.displayTasks();
+const text = "Це - рядок тексту. Рядок має унікальні слова: привіт, Привіт, світ, світ.";
+const result = analyzeText(text);
+console.log(result.uniqueWordsCount);
+console.log(result.uniqueWords);
