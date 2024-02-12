@@ -1,16 +1,22 @@
-import { Book } from './book.ts';
-import { getLastItem } from './generics.ts';
-import { processInput } from './union.ts';
+import { addContact, addGroup, addContactToGroup,
+    removeContactFromGroup, displayContacts } from './contactsManager';
 
-const book = new Book('Harry Potter', 'J.K. Rowling', 2001);
-book.getInfo();
+// Створення контактів
+const contact1 = addContact('John Doe', '123456789');
+const contact2 = addContact('Jane Smith', '987654321', 'jane@example.com');
 
-const array = [1, 2, 3, 4, 5];
-const lastItem = getLastItem(array);
-console.log(lastItem);
+// Створення груп
+const group1 = addGroup('Friends');
+const group2 = addGroup('Family');
 
-const numResult = processInput(5);
-console.log('Processed number:', numResult);
+// Додавання контактів до груп
+addContactToGroup(contact1, group1);
+addContactToGroup(contact2, group1);
+addContactToGroup(contact2, group2);
 
-const strResult = processInput('Hello');
-console.log('Processed string:', strResult);
+// Видалення контакту з групи
+removeContactFromGroup(contact1, group1);
+
+// Відображення контактів в групі
+displayContacts(group1);
+displayContacts(group2);
