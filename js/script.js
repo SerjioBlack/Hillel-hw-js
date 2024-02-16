@@ -1,25 +1,59 @@
 'use strict;'
 
-function trackObjects() {
-  const trackedObjects = new WeakSet();
+function searchPost() {
+  const postId = document.getElementById("postIdInput").value;
+  if (postId < 1 || postId > 100) {
+    alert("ID повинно бути від 1 до 100");
+    return;
+  }
 
-  return function (obj) {
-    if (trackedObjects.has(obj)) {
-      return true;
-    } else {
-      trackedObjects.add(obj);
-      return false;
-    }
-  };
+  fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((post) => {
+        const postContainer = document.getElementById("postContainer");
+        postContainer.innerHTML = `
+        <h2>Знайдений пост:</h2>
+        <div>
+          <h3>${post.title}</h3>
+          <p>${post.body}</p>
+          <button onclick="fetchComments(${postId})">Отримати
+коментарі</button>
+        </div>
+      `;
+      })
+      .catch((error) => {
+        alert("При пошуку поста виникла помилка:", error.message);
+        console.error("Error:", error);
+      });
 }
 
-const checkObject = trackObjects();
+function fetchComments(postId) {
+  fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((comments) => {
+        const postContainer = document.getElementById("postContainer");
+        const commentsList = comments
+            .map((comment) => `<li>${comment.body}</li>`)
+            .join("");
+        postContainer.innerHTML += `
+        <h3>Коментарі:</h3>
+        <ul>${commentsList}</ul>
+      `;
+      })
+      .catch((error) => {
+        alert("При отриманні коментарів виникла помилка:", error.message);
+        console.error("Error:", error);
+      });
+}
 
-const obj1 = { name: "John" };
-const obj2 = { name: "Jane" };
-
-console.log(checkObject(obj1));
-console.log(checkObject(obj1));
-console.log(checkObject(obj2));
-console.log(checkObject(obj2));
 
