@@ -1,17 +1,13 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css"
-import Slider from "./components/Slider";
-import firstImage from './images/first.jpeg';
-import secondImage from './images/second.jpeg';
-import thirdImage from './images/third.jpeg';
+import Collapse from "./components/Collapse";
 
 function App() {
-    const images = [firstImage, secondImage, thirdImage];
     return (
         <div className="App">
-            <h1>Пример использования компонента Slider</h1>
-            <Slider images={images} />
+            <h1>Пример использования компонента Collapse</h1>
+            <Collapse text="collapse me" />
         </div>
     );
 }
