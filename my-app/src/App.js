@@ -1,15 +1,17 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css"
-import BtnGroup from "./components/BtnGroup";
+import Slider from "./components/Slider";
+import firstImage from './images/first.jpeg';
+import secondImage from './images/second.jpeg';
+import thirdImage from './images/third.jpeg';
 
 function App() {
+    const images = [firstImage, secondImage, thirdImage];
     return (
         <div className="App">
-            <div>
-                <h1>Пример использования компонента BtnGroup</h1>
-                <BtnGroup />
-            </div>
+            <h1>Пример использования компонента Slider</h1>
+            <Slider images={images} />
         </div>
     );
 }
