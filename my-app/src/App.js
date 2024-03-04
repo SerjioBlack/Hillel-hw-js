@@ -1,17 +1,14 @@
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css"
-import ListGroup from "./components/ListGroup";
+import BtnGroup from "./components/BtnGroup";
 
 function App() {
     return (
         <div className="App">
             <div>
-                <h1>Пример использования компонента ListGroup</h1>
-                <ListGroup>
-                    <div>one</div>
-                    <div>two</div>
-                </ListGroup>
+                <h1>Пример использования компонента BtnGroup</h1>
+                <BtnGroup />
             </div>
         </div>
     );
