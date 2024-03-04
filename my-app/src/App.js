@@ -1,13 +1,9 @@
-import Card from "./components/Card";
-
+import Progress from "./components/Progress";
 function App() {
   return (
       <div className="App">
-        <Card title="Title 1" />
-
-        <Card text="Text 2" />
-
-        <Card title="Title 3" text="Text 3" />
+          <h1>Пример использования компонента Progress</h1>
+          <Progress percentage={40} />
       </div>
   );
 }
