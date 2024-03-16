@@ -1,31 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
-import MarkdownEditor from './components/MarkdownEditor.jsx';
-import './index.css';
-
-const App = () => {
-    const [markdownContent, setMarkdownContent] = useState('');
-
-    const handleContentChange = (content) => {
-        setMarkdownContent(content);
-    };
-
-    return (
-        <div>
-            <MarkdownEditor onContentChange={handleContentChange} />
-            <div>
-                <h2>Markdown Content:</h2>
-                <pre>{markdownContent}</pre>
-            </div>
-        </div>
-    );
-};
+import PostCatalog from './components/PostCatalog.jsx';
 
 const root = createRoot(document.getElementById('root'));
-root.render(
+
+const App = () => (
     <React.StrictMode>
-        <App />
+        <PostCatalog />
     </React.StrictMode>
 );
 
-export default App;
+root.render(<App />);
+
+export default App
