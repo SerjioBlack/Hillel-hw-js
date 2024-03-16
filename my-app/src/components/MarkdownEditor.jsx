@@ -13,7 +13,7 @@ const MarkdownEditor = ({ onContentChange }) => {
             hideModeSwitch: true,
         });
 
-        editorInstance.current.addHook('change', () => {
+        editorInstance.current.on('change', () => {
             const content = editorInstance.current.getMarkdown();
             onContentChange(content);
         });

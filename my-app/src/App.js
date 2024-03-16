@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-
+import { createRoot } from 'react-dom/client';
 import MarkdownEditor from './components/MarkdownEditor.jsx';
+import './index.css';
 
 const App = () => {
     const [markdownContent, setMarkdownContent] = useState('');
@@ -21,10 +21,11 @@ const App = () => {
     );
 };
 
-export default App;
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+const root = createRoot(document.getElementById('root'));
+root.render(
     <React.StrictMode>
         <App />
-    </React.StrictMode>,
+    </React.StrictMode>
 );
+
+export default App;
